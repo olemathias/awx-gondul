@@ -4,6 +4,7 @@
    gather_facts: no
 
    tasks:
+
    - name: create facts directory
      file:
        path: "{{playbook_dir}}/facts"
@@ -12,15 +13,17 @@
  - name: Get Facts from devices
    hosts: JUNOS
    roles:
-   - Juniper.junos
+    - Juniper.junos
    connection: local
    gather_facts: no
 
    tasks:
+
    - name: remove old facts from facts directory
      file:
        path: "{{playbook_dir}}/inventory/{{inventory_hostname}}.conf"
        state: absent
+
    - name: Retrieve facts from devices and save them locally
      junos_get_facts:
       host: "{{ mgmt_v4_addr }}"
@@ -28,6 +31,7 @@
       passwd: "Dataparty18"
       savedir: "{{ playbook_dir }}/facts"
      register: junos
+
    - name: Print some facts
      debug:
          msg: "device {{ junos.facts.hostname }} runs version {{ junos.facts.version }}"

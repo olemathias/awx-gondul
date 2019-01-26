@@ -20,7 +20,7 @@ def parse_args():
     return parser.parse_args()
 
 def list_switches():
-    r = requests.get('http://213.184.213.228/api/read/switches-management')
+    r = requests.get('http://10.10.2.20/api/read/switches-management')
     switches = r.json()['switches']
     hostsvars = {}
     hosts = []
@@ -35,7 +35,10 @@ def list_switches():
             'sysname': switch['sysname'],
             'mgmt_v4_addr': switch['mgmt_v4_addr'],
             'mgmt_v6_addr': switch['mgmt_v6_addr'],
-            'traffic_vlan': switch['traffic_vlan']
+            'traffic_vlan': switch['traffic_vlan'],
+            'ansible_host': switch['mgmt_v4_addr'],
+            'ansible_network_os': 'junos',
+            'host': switch['mgmt_v4_addr']
         }
         hostsvars.update({switch['sysname']: hostvar})
         hosts.append(switch['sysname'])
@@ -49,7 +52,7 @@ def list_switches():
     print(inv_string)
 
 def get_host_attributes(host):
-    r = requests.get('http://213.184.213.228/api/read/switches-management')
+    r = requests.get('http://10.10.2.20/api/read/switches-management')
     switches = r.json()['switches']
     if host not in switches:
         print(json.dumps({}, indent=1, sort_keys=True))
@@ -65,7 +68,10 @@ def get_host_attributes(host):
         'sysname': switch['sysname'],
         'mgmt_v4_addr': switch['mgmt_v4_addr'],
         'mgmt_v6_addr': switch['mgmt_v6_addr'],
-        'traffic_vlan': switch['traffic_vlan']
+        'traffic_vlan': switch['traffic_vlan'],
+        'ansible_host': switch['mgmt_v4_addr'],
+        'ansible_network_os': 'junos',
+        'host': switch['mgmt_v4_addr']
     }
     inv_string = json.dumps(hostvar, indent=1, sort_keys=True)
     print(inv_string)

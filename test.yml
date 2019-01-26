@@ -1,37 +1,19 @@
 ---
- - name: create facts directory
-   hosts: localhost
-   gather_facts: no
-
-   tasks:
-
-   - name: create facts directory
-     file:
-       path: "{{playbook_dir}}/facts"
-       state: directory
-
  - name: Get Facts from devices
-   hosts: JUNOS
+   hosts: switches
    roles:
     - Juniper.junos
    connection: local
    gather_facts: no
 
    tasks:
-
-   - name: remove old facts from facts directory
-     file:
-       path: "{{playbook_dir}}/inventory/{{inventory_hostname}}.conf"
-       state: absent
-
-   - name: Retrieve facts from devices and save them locally
+   - name: Retrieve facts from devices
      junos_get_facts:
       host: "{{ mgmt_v4_addr }}"
-      user: "lcs"
-      passwd: "Dataparty18"
-      savedir: "{{ playbook_dir }}/facts"
+      user: "{{ lookup('env','ANSIBLE_NET_USERNAME') }}"
+      passwd: "{{ lookup('env','ANSIBLE_NET_PASSWORD') }}"
      register: junos
 
    - name: Print some facts
      debug:
-         msg: "device {{ junos.facts.hostname }} runs version {{ junos.facts.version }}"
+         msg: "device {{ junos.facts.hostname }} {{ junos.facts }}"

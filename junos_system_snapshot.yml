@@ -13,4 +13,4 @@
       user: "{{ lookup('env','ANSIBLE_NET_USERNAME') }}"
       passwd: "{{ lookup('env','ANSIBLE_NET_PASSWORD') }}"
       commands: "request system snapshot slice alternate"
-      timeout: 300
+      timeout: 1500  

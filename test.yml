@@ -8,7 +8,7 @@
 
    tasks:
    - name: Retrieve facts from devices
-     junos_get_facts:
+     juniper_junos_facts:
       host: "{{ mgmt_v4_addr }}"
       user: "{{ lookup('env','ANSIBLE_NET_USERNAME') }}"
       passwd: "{{ lookup('env','ANSIBLE_NET_PASSWORD') }}"

@@ -1,0 +1,13 @@
+---
+ - name: Request system snapshot slice alternate
+   hosts: switches
+   roles:
+    - Juniper.junos
+   connection: local
+   gather_facts: no
+
+   tasks:
+   - name: Execute request system snapshot slice alternate
+     juniper_junos_command:
+      commands: "request system snapshot slice alternate"
+      timeout: 300

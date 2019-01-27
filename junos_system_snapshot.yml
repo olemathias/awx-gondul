@@ -9,5 +9,8 @@
    tasks:
    - name: Execute request system snapshot slice alternate
      juniper_junos_command:
+      host: "{{ mgmt_v4_addr }}"
+      user: "{{ lookup('env','ANSIBLE_NET_USERNAME') }}"
+      passwd: "{{ lookup('env','ANSIBLE_NET_PASSWORD') }}"
       commands: "request system snapshot slice alternate"
       timeout: 300

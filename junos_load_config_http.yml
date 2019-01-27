@@ -1,0 +1,27 @@
+---
+  - name: Push config
+   hosts: switches
+   roles:
+    - Juniper.junos
+   connection: local
+   gather_facts: no
+
+  - name: Load conf. Confirm within 5 min. Wait 3 secs between chk and commit
+    juniper_junos_config:
+      load: 'merge'
+      url: "http://10.10.2.20/api/templates/magic.conf/switch={{sysname}}"
+      confirm: 5
+      check_commit_wait: 3
+    register: response
+  - name: Print the complete response
+    debug:
+      var: response
+  - name: Confirm the previous commit with a commit check (but no commit)
+    juniper_junos_config:
+      check: true
+      diff: false
+      commit: false
+    register: response
+  - name: Print the complete response
+    debug:
+      var: response

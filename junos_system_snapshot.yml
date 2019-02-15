@@ -5,12 +5,21 @@
     - Juniper.junos
    connection: local
    gather_facts: no
-
    tasks:
-   - name: Execute request system snapshot slice alternate
-     juniper_junos_command:
-      host: "{{ mgmt_v4_addr }}"
-      user: "{{ lookup('env','ANSIBLE_NET_USERNAME') }}"
-      passwd: "{{ lookup('env','ANSIBLE_NET_PASSWORD') }}"
-      commands: "request system snapshot slice alternate"
-      timeout: 1500  
+    - name: Check snapshot state
+      juniper_junos_rpc:
+       host: "{{ mgmt_v4_addr }}"
+       user: "{{ lookup('env','ANSIBLE_NET_USERNAME') }}"
+       passwd: "{{ lookup('env','ANSIBLE_NET_PASSWORD') }}"
+       rpcs: "get-snapshot-information"
+       kwargs: "media=internal"
+       formats: "xml"
+      register: response
+    - name: Execute request system snapshot slice alternate
+      when: response.parsed_output["multi-routing-engine-results"]["multi-routing-engine-item"]["snapshot-information"]["software-version"].0.package.1["package-version"] != response.parsed_output["multi-routing-engine-results"]["multi-routing-engine-item"]["snapshot-information"]["software-version"].1.package.1["package-version"]
+      juniper_junos_command:
+       host: "{{ mgmt_v4_addr }}"
+       user: "{{ lookup('env','ANSIBLE_NET_USERNAME') }}"
+       passwd: "{{ lookup('env','ANSIBLE_NET_PASSWORD') }}"
+       commands: "request system snapshot slice alternate"
+       timeout: 1500
